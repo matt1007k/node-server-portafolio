@@ -1,9 +1,10 @@
-const express = require('express')
+const express = require("express");
 
-const app = express()
+const app = express();
 
-app.use( '/auth', require('./authenticate') )
-app.use( '/users', require('./user') )
-app.use( '/categories', require('./category') )
+app.use("/auth", require("./authenticate"));
+app.use("/users", require("./user"));
+app.use("/categories", require("./category"));
+app.use("/search", require("./search"));
 
-module.exports = app
+module.exports = app;

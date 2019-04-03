@@ -7,20 +7,20 @@ function index(req, res) {
   let limit = req.query.limit || 0;
   limit = Number(limit);
 
-  Category.find({}, "title")
+  Category.find({}, "title description")
     .skip(desde)
-    .limit(limit);
-  exec((error, categoriesDB) => {
-    if (error) {
-      return res.status(500).json(error);
-    }
-    Category.collection.countDocuments({}, (error, totalc) => {
-      res.status(200).json({
-        categories: categoriesDB,
-        total: totalc
+    .limit(limit)
+    .exec((error, categoriesDB) => {
+      if (error) {
+        return res.status(500).json(error);
+      }
+      Category.collection.countDocuments({}, (error, totalc) => {
+        res.status(200).json({
+          categories: categoriesDB,
+          total: totalc
+        });
       });
     });
-  });
 }
 
 function create(req, res) {
@@ -29,6 +29,7 @@ function create(req, res) {
   let category = new Category();
 
   category.title = body.title;
+  category.description = body.description;
 
   category.save((error, categoryCreated) => {
     if (error) {
@@ -59,6 +60,8 @@ function update(req, res) {
     }
 
     category.title = body.title;
+    category.description = body.description;
+
     category.save((error, categoryUpdated) => {
       if (error) {
         return res.status(500).json({

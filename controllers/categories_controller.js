@@ -1,10 +1,30 @@
 const Category = require("../models/Category");
 
+function getAllByAscTitle(req, res) {
+  let titleAsc = [["title", "asc"]];
+
+  Category.find({}, "title")
+    .sort(titleAsc)
+    .exec((error, categoriesDB) => {
+      if (error) {
+        return res.status(500).json({
+          ok: false,
+          error
+        });
+      }
+
+      res.status(200).json({
+        ok: true,
+        categories: categoriesDB
+      });
+    });
+}
+
 function index(req, res) {
   let desde = req.query.desde || 0;
   desde = Number(desde);
 
-  let limit = req.query.limit || 0;
+  let limit = req.query.limit || 5;
   limit = Number(limit);
 
   Category.find({}, "title description")
@@ -25,6 +45,7 @@ function index(req, res) {
 
 function create(req, res) {
   let body = req.body;
+  console.log(body);
 
   let category = new Category();
 
@@ -37,6 +58,7 @@ function create(req, res) {
     }
 
     res.status(200).json({
+      ok: true,
       category: categoryCreated
     });
   });
@@ -89,13 +111,14 @@ function destroy(req, res) {
     }
 
     res.status(200).json({
-      message: "Cateria eliminada con exito"
+      message: "Categoria eliminada con exito"
     });
   });
 }
 
 module.exports = {
   index,
+  getAllByAscTitle,
   create,
   update,
   destroy

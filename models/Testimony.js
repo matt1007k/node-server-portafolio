@@ -1,20 +1,23 @@
-const mongoose, { Schema } = require('mongoose')
+const { Schema, model } = require("mongoose");
 
-const { ObjectId } = Schema.Types
+const { ObjectId } = Schema.Types;
 
-const testimonySchema = new Schema({
+const testimonySchema = new Schema(
+  {
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: [true, "Title is required"]
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: [true, "Description is required"]
     },
     client: {
-        type: ObjectId,
-        ref: 'Client'
+      type: ObjectId,
+      ref: "Client"
     }
-}, { timestamps: true })
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('Testimony', testimonySchema)
+module.exports = model("Testimony", testimonySchema);

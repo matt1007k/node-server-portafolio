@@ -4,7 +4,7 @@ function index(req, res) {
   let desde = req.query.desde || 0;
   desde = Number(desde);
 
-  let limit = req.query.limit || 0;
+  let limit = req.query.limit || 5;
   limit = Number(limit);
 
   User.find({}, "name email avatar role")

@@ -1,6 +1,6 @@
 const User = require("../models/User");
 const Category = require("../models/Category");
-// const Project = require("../models/Project");
+const Project = require("../models/Project");
 
 function searchAll(req, res) {
   const busqueda = req.params.busqueda;
@@ -9,14 +9,14 @@ function searchAll(req, res) {
   console.log(busqueda);
   Promise.all([
     searchUsers(busqueda, regex),
-    searchCategories(busqueda, regex)
-    // searchProjects(busqueda, regex)
+    searchCategories(busqueda, regex),
+    searchProjects(busqueda, regex)
   ]).then(items => {
     res.status(200).json({
       ok: true,
       users: items[0],
-      categories: items[1]
-      //   projects: items[2]
+      categories: items[1],
+      projects: items[2]
     });
   });
 }
@@ -34,6 +34,9 @@ function searchCollection(req, res) {
       break;
     case "categories":
       promesa = searchCategories(busqueda, regex);
+      break;
+    case "projects":
+      promesa = searchProjects(busqueda, regex);
       break;
     default:
       return res.status(400).json({
@@ -62,19 +65,19 @@ function searchCategories(busqueda, regex) {
   });
 }
 
-// function searchProjects(busqueda, regex) {
-//   return new Promise((resolve, reject) => {
-//     Project.find({ title: regex })
-//       .populate("category", "title description")
-//       .exec((err, projects) => {
-//         if (err) {
-//           reject("Error al buscar: ", err);
-//         } else {
-//           resolve(projects);
-//         }
-//       });
-//   });
-// }
+function searchProjects(busqueda, regex) {
+  return new Promise((resolve, reject) => {
+    Project.find({ title: regex }, "title description img")
+      .populate("category", "title")
+      .exec((err, projects) => {
+        if (err) {
+          reject("Error al buscar: ", err);
+        } else {
+          resolve(projects);
+        }
+      });
+  });
+}
 
 function searchUsers(busqueda, regex) {
   return new Promise((resolve, reject) => {

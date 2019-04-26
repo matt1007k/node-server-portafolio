@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const Category = require("../models/Category");
 const Project = require("../models/Project");
+const Service = require("../models/Service");
 
 function searchAll(req, res) {
   const busqueda = req.params.busqueda;
@@ -10,7 +11,8 @@ function searchAll(req, res) {
   Promise.all([
     searchUsers(busqueda, regex),
     searchCategories(busqueda, regex),
-    searchProjects(busqueda, regex)
+    searchProjects(busqueda, regex),
+    searchServices(busqueda, regex)
   ]).then(items => {
     res.status(200).json({
       ok: true,
@@ -37,6 +39,9 @@ function searchCollection(req, res) {
       break;
     case "projects":
       promesa = searchProjects(busqueda, regex);
+      break;
+    case "services":
+      promesa = searchServices(busqueda, regex);
       break;
     default:
       return res.status(400).json({
@@ -90,6 +95,18 @@ function searchUsers(busqueda, regex) {
           resolve(users);
         }
       });
+  });
+}
+
+function searchServices(busqueda, regex) {
+  return new Promise((resolve, reject) => {
+    Service.find({ title: regex }, (err, services) => {
+      if (err) {
+        reject("Error al buscar: ", err);
+      } else {
+        resolve(services);
+      }
+    });
   });
 }
 

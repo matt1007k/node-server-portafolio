@@ -4,10 +4,10 @@ const serviceSchema = new Schema(
   {
     title: {
       type: String,
-      required: true
+      required: [true, "Title is required"]
     },
     description: String,
-    icon: String
+    img: String
   },
   { timestamps: true }
 );
